@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+    <import resource="spring-service.xml"/>
+
+    <!--配置组件扫描,扫描controller（controller层注入） -->
+    <context:component-scan base-package="com.vivo.controller"/>
+
+    <!-- 配置MVC注解扫描,相当于同时配置了HandlerMapping和Controller-->
+    <mvc:annotation-driven/>
+
+    <!--第一种静态文件映射方式，搭配web.xml配置-->
+    <mvc:default-servlet-handler/>
+
+    <!-- 第二种静态文件映射方式 -->
+    <!--<mvc:resources location="/static/css/" mapping="/css/**"/>-->
+
+    <!-- 视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/pages/"/> <!-- 前缀 -->
+        <property name="suffix" value=".jsp"/><!-- 后缀 -->
+    </bean>
+
+    <!--拦截器的注册-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/person/**"/>
+            <!--<mvc:exclude-mapping path="/person/add"/>-->
+            <bean class="com.vivo.global.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+</beans>
